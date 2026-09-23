@@ -926,8 +926,6 @@ function RequireAuth({ children }) {
 
 }
 
-
-
 export default function App() {
 
   return (
@@ -935,15 +933,10 @@ export default function App() {
     <Routes>
 
       <Route path="/" element={<Home/>}/>
-
       <Route path="/i/:slug" element={<PublicPage/>}/>
-
       <Route path="/dashboard" element={<RequireAuth><Dashboard/></RequireAuth>}/>
-
       <Route path="/crear" element={<RequireAuth><Create/></RequireAuth>}/>
-
       <Route path="/editar/:id" element={<RequireAuth><EditorPage/></RequireAuth>}/>
-
       <Route path="*" element={<Navigate to="/" replace/>}/>
 
     </Routes>

@@ -26,8 +26,8 @@ function Layout({ children }) {
           <Link to="/crear" onClick={() => setOpen(false)}><Plus size={17}/> Nueva invitación</Link>
         </nav>
         <div className="sidebar-user">
-          <small>{user?.email || "Modo demo local"}</small>
-          <button onClick={signOut}><LogOut size={15}/> Salir</button>
+          <small>{user?.email || "Usuario Invitado"}</small>
+          <button onClick={() => window.location.href = "/"}><LogOut size={15}/> Salir</button>
         </div>
       </aside>
       <button className="mobile-menu" onClick={() => setOpen(!open)}>{open ? <X/> : <Menu/>}</button>
@@ -45,7 +45,7 @@ function Dashboard() {
   const load = async () => {
     setLoading(true);
     try { setItems(await listInvitations(user?.id || "demo")); }
-    catch (e) { alert(e.message); }
+    catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
 
@@ -179,7 +179,7 @@ function EditorPage() {
       setInv(invitationToForm(result));
       setSaved(true);
       setTimeout(() => setSaved(false), 1800);
-    } catch (e) { alert(e.message); }
+    } catch (e) { alert("Error al guardar. Verifica tu URL de Supabase en Vercel."); }
     finally { setSaving(false); }
   };
 
@@ -199,7 +199,7 @@ function EditorPage() {
     try {
       const result = await updateInvitation(id, { ...inv, is_published: next }, user?.id || "demo");
       setInv(invitationToForm(result));
-    } catch (e) { alert(e.message); }
+    } catch (e) { alert("Error al publicar. Verifica tu URL de Supabase en Vercel."); }
   };
 
   const tabs = [
@@ -399,67 +399,18 @@ function PublicPage() {
   return <PublicInvitation invitation={inv} trackView/>;
 }
 
+/* 🟢 MODIFICACIÓN: Redirigir siempre al Dashboard sin mostrar el Login */
 function Home() {
-  const { user, supabaseEnabled } = useAuth();
-  if (user || !supabaseEnabled) return <Navigate to="/dashboard" replace/>;
-  return <AuthPage/>;
+  return <Navigate to="/dashboard" replace/>;
 }
 
 function AuthPage() {
-  const { signIn, signUp, supabaseEnabled } = useAuth();
-  const [mode, setMode] = useState("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const submit = async e => {
-    e.preventDefault();
-    setBusy(true); setMessage("");
-    try {
-      const result = mode === "login" ? await signIn(email, password) : await signUp(email, password);
-      if (result.error) throw result.error;
-      setMessage(mode === "login" ? "Sesión iniciada." : "Cuenta creada. Revisa tu correo si Supabase solicita confirmación.");
-    } catch (e) { setMessage(e.message); }
-    finally { setBusy(false); }
-  };
-
-  if (!supabaseEnabled) {
-    return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <div className="auth-logo"><Heart size={20} fill="currentColor"/> Bodas<span>Editor</span></div>
-          <h1>Modo demo</h1>
-          <p>El proyecto funciona localmente sin Supabase. Los datos se guardan en tu navegador.</p>
-          <Link className="primary-btn centered" to="/dashboard">Entrar al editor</Link>
-          <div className="info-note"><strong>Para producción:</strong><p>Crea un proyecto Supabase y configura <code>.env.local</code> con la URL y la anon key.</p></div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="auth-page">
-      <form className="auth-card" onSubmit={submit}>
-        <div className="auth-logo"><Heart size={20} fill="currentColor"/> Bodas<span>Editor</span></div>
-        <h1>{mode === "login" ? "Bienvenido" : "Crear cuenta"}</h1>
-        <p>{mode === "login" ? "Ingresa para administrar tus invitaciones." : "Crea tu cuenta para guardar tus invitaciones en la nube."}</p>
-        <Field label="Correo electrónico"><input type="email" value={email} onChange={e => setEmail(e.target.value)} required/></Field>
-        <Field label="Contraseña"><input type="password" value={password} onChange={e => setPassword(e.target.value)} minLength={6} required/></Field>
-        {message && <div className="auth-message">{message}</div>}
-        <button className="primary-btn centered" disabled={busy}>{busy ? "Procesando..." : mode === "login" ? "Iniciar sesión" : "Registrarme"}</button>
-        <button type="button" className="text-button" onClick={() => setMode(mode === "login" ? "register" : "login")}>
-          {mode === "login" ? "No tengo cuenta → Registrarme" : "Ya tengo cuenta → Iniciar sesión"}
-        </button>
-      </form>
-    </div>
-  );
+  // Se mantiene el componente por si acaso, pero ya no se usará.
+  return null;
 }
 
+/* 🟢 MODIFICACIÓN: Deja pasar a todos sin verificar sesión */
 function RequireAuth({ children }) {
-  const { user, loading, supabaseEnabled } = useAuth();
-  if (loading) return <Loading/>;
-  if (!user && supabaseEnabled) return <Navigate to="/" replace/>;
   return children;
 }
 

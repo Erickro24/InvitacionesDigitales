@@ -11,11 +11,12 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
     "@vitejs/plugin-react": "^5.0.4",
+    "canvas-confetti": "^1.9.4",
+    "framer-motion": "^13.4.1",
     "lucide-react": "^0.468.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.2",
     "vite": "^7.1.7"
-  },
-  "devDependencies": {}
+  }
 }

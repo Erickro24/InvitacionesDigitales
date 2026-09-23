@@ -1,14 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Menu, MapPin, Music, Pause, Play, Heart, CalendarDays, Shirt, ExternalLink } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { 
+  Menu, MapPin, Music, Pause, Play, Heart, CalendarDays, 
+  Shirt, ExternalLink, VolumeX, Copy, Check 
+} from "lucide-react";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
 
-function Countdown({ date }) {
-  const get = () => Math.max(0, new Date(date).getTime() - Date.now());
+// 1. Componente para Animación al hacer Scroll
+export const FadeInSection = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// 2. Componente de Cuenta Regresiva
+export function Countdown({ date, targetDate }) {
+  const finalDate = date || targetDate;
+  const get = () => Math.max(0, new Date(finalDate).getTime() - Date.now());
   const [ms, setMs] = useState(get());
 
   useEffect(() => {
     const timer = setInterval(() => setMs(get()), 1000);
     return () => clearInterval(timer);
-  }, [date]);
+  }, [finalDate]);
 
   const total = Math.floor(ms / 1000);
   const values = {
@@ -30,6 +51,7 @@ function Countdown({ date }) {
   );
 }
 
+// 3. Ilustración de Hoja Botánica
 function Leaf({ flip = false }) {
   return (
     <svg className={`leaf ${flip ? "flip" : ""}`} viewBox="0 0 160 90">
@@ -45,14 +67,53 @@ function Leaf({ flip = false }) {
   );
 }
 
+// 4. Reproductor de Música Flotante Independiente
+export const MusicPlayer = ({ audioUrl }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (audioUrl) {
+      audioRef.current = new Audio(audioUrl);
+      audioRef.current.loop = true;
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, [audioUrl]);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(() => {});
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  return (
+    <button
+      onClick={toggleMusic}
+      className="fixed bottom-6 right-6 z-50 bg-[#D4AF37] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform"
+      aria-label="Música de fondo"
+    >
+      {isPlaying ? <Music className="animate-spin" size={24} /> : <VolumeX size={24} />}
+    </button>
+  );
+};
+
+// 5. Componente Principal de Invitación Pública
 export function PublicInvitation({ invitation, trackView = false }) {
   const [menu, setMenu] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const audioRef = React.useRef(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (trackView) {
-      // La vista pública puede llamar a la función de tracking desde el contenedor.
+      // Función de seguimiento de visitas si está activa
     }
   }, [trackView]);
 
@@ -70,6 +131,15 @@ export function PublicInvitation({ invitation, trackView = false }) {
   };
 
   const confirmWhatsApp = () => {
+    try {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#D4AF37', '#1B4332', '#FDFBF7']
+      });
+    } catch (e) {}
+
     const number = (invitation.phone || "").replace(/\D/g, "");
     const message = encodeURIComponent(
       `Hola ${invitation.groom} y ${invitation.bride}, les escribo por su invitación de boda.`
@@ -104,93 +174,124 @@ export function PublicInvitation({ invitation, trackView = false }) {
         </>
       )}
 
-      <section id="inicio" className="hero-public">
-        <div className="hero-paper">
-          <div className="hero-botanical left"><Leaf /></div>
-          <div className="hero-botanical right"><Leaf flip /></div>
+      {/* PORTADA CON ANIMACIÓN */}
+      <FadeInSection>
+        <section id="inicio" className="hero-public">
+          <div className="hero-paper">
+            <div className="hero-botanical left"><Leaf /></div>
+            <div className="hero-botanical right"><Leaf flip /></div>
 
-          <p className="eyebrow">{invitation.announcement}</p>
-          <h1>{invitation.groom} <span>&amp;</span> {invitation.bride}</h1>
-          <p className="hero-subtitle">{invitation.subtitle}</p>
+            <p className="eyebrow">{invitation.announcement}</p>
+            <h1>{invitation.groom} <span>&amp;</span> {invitation.bride}</h1>
+            <p className="hero-subtitle">{invitation.subtitle}</p>
 
-          <div className="hero-image">
-            {invitation.hero_image ? (
-              <img src={invitation.hero_image} alt={`${invitation.groom} y ${invitation.bride}`} />
-            ) : (
-              <div className="empty-photo">Agrega tu fotografía</div>
-            )}
-          </div>
+            <div className="hero-image">
+              {invitation.hero_image ? (
+                <img src={invitation.hero_image} alt={`${invitation.groom} y ${invitation.bride}`} />
+              ) : (
+                <div className="empty-photo">Agrega tu fotografía</div>
+              )}
+            </div>
 
-          <p className="hero-date">{invitation.date_label}</p>
-        </div>
-      </section>
-
-      <section className="public-section story">
-        <div className="mini-ornament"><Leaf /></div>
-        <p className="script-text">{invitation.dedication}</p>
-        <div className="couple-name">{invitation.groom.toUpperCase()} &amp; {invitation.bride.toUpperCase()}</div>
-        <Heart size={25} className="accent-icon" fill="currentColor" />
-      </section>
-
-      <section className="public-section date-block">
-        <p className="section-kicker">RESERVA ESTA FECHA</p>
-        <h2>{invitation.date_label}</h2>
-        <p className="large-time">{invitation.time_label}</p>
-        <Countdown date={invitation.date_iso} />
-      </section>
-
-      <section id="evento" className="public-section event-grid">
-        <article className="event-box">
-          <CalendarDays className="accent-icon" />
-          <h3>Ceremonia</h3>
-          <p>{invitation.ceremony}</p>
-          <strong>{invitation.time_label}</strong>
-          <a href={invitation.maps_url} target="_blank" rel="noreferrer"><MapPin size={14}/> Ver ubicación</a>
-        </article>
-        <article className="event-box">
-          <Heart className="accent-icon" />
-          <h3>Recepción</h3>
-          <p>{invitation.reception}</p>
-          <p>{invitation.address}</p>
-          <a href={invitation.maps_url} target="_blank" rel="noreferrer"><ExternalLink size={14}/> Cómo llegar</a>
-        </article>
-        <article className="event-box">
-          <Shirt className="accent-icon" />
-          <h3>Vestimenta</h3>
-          <p>{invitation.dress_code}</p>
-          <p>Gracias por acompañarnos en este momento.</p>
-        </article>
-      </section>
-
-      {invitation.gallery?.length > 0 && (
-        <section id="galeria" className="public-section gallery-block">
-          <p className="section-kicker">NUESTROS MOMENTOS</p>
-          <h2>Una historia para recordar</h2>
-          <div className="public-gallery">
-            {invitation.gallery.map((url, index) => (
-              <img src={url} key={index} alt={`Momento ${index + 1}`} />
-            ))}
+            <p className="hero-date">{invitation.date_label}</p>
           </div>
         </section>
+      </FadeInSection>
+
+      {/* HISTORIA CON ANIMACIÓN */}
+      <FadeInSection>
+        <section className="public-section story">
+          <div className="mini-ornament"><Leaf /></div>
+          <p className="script-text">{invitation.dedication}</p>
+          <div className="couple-name">
+            {(invitation.groom || "").toUpperCase()} &amp; {(invitation.bride || "").toUpperCase()}
+          </div>
+          <Heart size={25} className="accent-icon" fill="currentColor" />
+        </section>
+      </FadeInSection>
+
+      {/* CUENTA REGRESIVA CON ANIMACIÓN */}
+      <FadeInSection>
+        <section className="public-section date-block">
+          <p className="section-kicker">RESERVA ESTA FECHA</p>
+          <h2>{invitation.date_label}</h2>
+          <p className="large-time">{invitation.time_label}</p>
+          <Countdown date={invitation.date_iso} />
+        </section>
+      </FadeInSection>
+
+      {/* EVENTO Y LUGAR CON ANIMACIÓN */}
+      <FadeInSection>
+        <section id="evento" className="public-section event-grid">
+          <article className="event-box">
+            <CalendarDays className="accent-icon" />
+            <h3>Ceremonia</h3>
+            <p>{invitation.ceremony}</p>
+            <strong>{invitation.time_label}</strong>
+            {invitation.maps_url && (
+              <a href={invitation.maps_url} target="_blank" rel="noreferrer">
+                <MapPin size={14}/> Ver ubicación
+              </a>
+            )}
+          </article>
+          <article className="event-box">
+            <Heart className="accent-icon" />
+            <h3>Recepción</h3>
+            <p>{invitation.reception}</p>
+            <p>{invitation.address}</p>
+            {invitation.maps_url && (
+              <a href={invitation.maps_url} target="_blank" rel="noreferrer">
+                <ExternalLink size={14}/> Cómo llegar
+              </a>
+            )}
+          </article>
+          <article className="event-box">
+            <Shirt className="accent-icon" />
+            <h3>Vestimenta</h3>
+            <p>{invitation.dress_code}</p>
+            <p>Gracias por acompañarnos en este momento.</p>
+          </article>
+        </section>
+      </FadeInSection>
+
+      {/* GALERÍA DE FOTOS CON ANIMACIÓN */}
+      {invitation.gallery?.length > 0 && (
+        <FadeInSection>
+          <section id="galeria" className="public-section gallery-block">
+            <p className="section-kicker">NUESTROS MOMENTOS</p>
+            <h2>Una historia para recordar</h2>
+            <div className="public-gallery">
+              {invitation.gallery.map((url, index) => (
+                <img src={url} key={index} alt={`Momento ${index + 1}`} />
+              ))}
+            </div>
+          </section>
+        </FadeInSection>
       )}
 
-      <section id="detalles" className="public-section contact-block">
-        <div className="contact-card">
-          <p className="section-kicker">UN DÍA ESPECIAL</p>
-          <h2>Gracias por acompañarnos</h2>
-          <p>Será un honor compartir este momento contigo.</p>
-          {invitation.phone && (
-            <button className="accent-button" onClick={confirmWhatsApp}>
-              Escribir por WhatsApp
-            </button>
-          )}
-        </div>
-      </section>
+      {/* CONTACTO Y WHATSAPP CON ANIMACIÓN */}
+      <FadeInSection>
+        <section id="detalles" className="public-section contact-block">
+          <div className="contact-card">
+            <p className="section-kicker">UN DÍA ESPECIAL</p>
+            <h2>Gracias por acompañarnos</h2>
+            <p>Será un honor compartir este momento contigo.</p>
+            {invitation.phone && (
+              <button className="accent-button" onClick={confirmWhatsApp}>
+                Escribir por WhatsApp
+              </button>
+            )}
+          </div>
+        </section>
+      </FadeInSection>
 
-      <footer className="public-footer">
-        <p>Con amor, {invitation.groom} &amp; {invitation.bride}</p>
-        <small>Invitación digital</small>
-      </footer>
+      {/* PIE DE PÁGINA CON ANIMACIÓN */}
+      <FadeInSection>
+        <footer className="public-footer">
+          <p>Con amor, {invitation.groom} &amp; {invitation.bride}</p>
+          <small>Invitación digital</small>
+        </footer>
+      </FadeInSection>
     </div>
   );
 }

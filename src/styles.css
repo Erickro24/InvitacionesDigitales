@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Parisienne&display=swap");
+
+:root {
+  font-family: "Montserrat", sans-serif;
+  color: #30312f;
+  background: #f5f6f7;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+button, input, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; }
+
+.loading-screen, .not-found {
+  min-height: 100vh; display: grid; place-items: center; align-content: center;
+  text-align: center; padding: 30px; background: #f8f5ef;
+}
+.not-found svg { margin: auto; color: #9c7c83; }
+.not-found h1 { font-family: "Cormorant Garamond"; font-size: 42px; margin: 15px 0 5px; }
+
+.app-shell { min-height: 100vh; display: flex; background: #f5f6f8; }
+.app-sidebar {
+  width: 235px; background: #191a28; color: #fff; position: fixed; inset: 0 auto 0 0;
+  padding: 24px 16px; display: flex; flex-direction: column; z-index: 40;
+}
+.app-brand { font-size: 19px; font-weight: 700; padding: 0 10px 35px; display: flex; gap: 7px; align-items: center; }
+.app-brand span { font-weight: 400; }
+.app-sidebar nav { display: grid; gap: 7px; }
+.app-sidebar nav a {
+  text-decoration: none; display: flex; align-items: center; gap: 11px; padding: 12px 13px;
+  border-radius: 9px; color: #d9dae1; font-size: 13px;
+}
+.app-sidebar nav a:hover { background: #2a2b3b; color: #fff; }
+.sidebar-user { margin-top: auto; border-top: 1px solid #343544; padding: 16px 8px 0; }
+.sidebar-user small { display: block; color: #aaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 10px; }
+.sidebar-user button { background: transparent; color: #ddd; border: 0; display: flex; gap: 7px; align-items: center; padding: 5px 0; font-size: 12px; }
+.app-main { margin-left: 235px; width: calc(100% - 235px); min-height: 100vh; }
+.mobile-menu { display: none; }
+
+.topbar {
+  padding: 42px 48px 28px; display: flex; justify-content: space-between; align-items: end; gap: 20px;
+  background: #fff; border-bottom: 1px solid #e7e7e7;
+}
+.top-kicker, .section-kicker { letter-spacing: .13em; font-size: 10px; color: #888; margin: 0 0 6px; }
+.topbar h1 { margin: 0; font-family: "Cormorant Garamond"; font-size: 40px; font-weight: 600; }
+.topbar p:not(.top-kicker) { color: #777; font-size: 13px; margin: 5px 0 0; }
+.primary-btn, .publish-btn, .unpublish-btn, .outline-btn {
+  border: 0; border-radius: 8px; padding: 10px 14px; display: inline-flex; align-items: center;
+  justify-content: center; gap: 7px; text-decoration: none; font-size: 12px; white-space: nowrap;
+}
+.primary-btn { background: #292a3a; color: white; }
+.primary-btn:hover { background: #3a3b4d; }
+.primary-btn.big { padding: 14px 25px; font-size: 13px; }
+.publish-btn { background: #738a67; color: #fff; }
+.unpublish-btn { background: #eee; color: #555; }
+.outline-btn { border: 1px solid #ddd; background: white; color: #555; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 25px 48px; }
+.stats > div { background: #fff; border: 1px solid #e6e6e6; padding: 20px; border-radius: 12px; }
+.stats span { display: block; color: #888; font-size: 11px; margin-bottom: 7px; }
+.stats strong { font-size: 30px; font-family: "Cormorant Garamond"; }
+
+.invitation-grid { padding: 5px 48px 50px; display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 20px; }
+.invitation-card { background: #fff; border: 1px solid #e3e3e3; border-radius: 13px; overflow: hidden; }
+.card-cover { height: 220px; display: grid; place-items: center; position: relative; overflow: hidden; color: #829176; }
+.card-cover img { width: 100%; height: 100%; object-fit: cover; }
+.card-cover .published, .card-cover .draft { position: absolute; top: 12px; right: 12px; font-size: 9px; padding: 5px 7px; border-radius: 20px; background: rgba(255,255,255,.9); }
+.card-cover .published { color: #57704e; }
+.card-cover .draft { color: #777; }
+.card-body { padding: 17px; }
+.card-body h3 { margin: 0; font-family: "Cormorant Garamond"; font-size: 25px; }
+.card-body p { color: #888; font-size: 11px; margin: 4px 0 12px; }
+.card-meta { display: flex; justify-content: space-between; color: #999; font-size: 10px; padding-bottom: 12px; }
+.card-meta span { display: flex; gap: 4px; align-items: center; }
+.card-actions { display: flex; gap: 5px; flex-wrap: wrap; border-top: 1px solid #eee; padding-top: 11px; }
+.card-actions button, .card-actions a {
+  background: #f4f4f5; color: #555; border: 0; border-radius: 6px; padding: 7px 8px; text-decoration: none;
+  font-size: 10px; display: inline-flex; align-items: center; gap: 4px;
+}
+.card-actions .danger { margin-left: auto; color: #a66; }
+.empty-dashboard { margin: 30px 48px; padding: 80px 20px; text-align: center; background: #fff; border: 1px dashed #ddd; border-radius: 14px; }
+.empty-dashboard svg { color: #9aa78e; }
+.empty-dashboard h2 { font-family: "Cormorant Garamond"; font-size: 30px; margin: 12px 0 4px; }
+.empty-dashboard p { color: #888; font-size: 12px; margin-bottom: 20px; }
+
+.create-page { max-width: 1000px; margin: 0 auto; padding: 55px 35px; text-align: center; }
+.create-icon { width: 68px; height: 68px; border-radius: 50%; display: grid; place-items: center; margin: auto; background: #eceee9; color: #74836a; }
+.create-page h1 { font-family: "Cormorant Garamond"; font-size: 44px; margin: 18px 0 5px; }
+.create-page > p { color: #888; font-size: 13px; }
+.template-chooser { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 35px 0; text-align: left; }
+.template-mini { background: #fff; border: 1px solid #e2e2e2; padding: 10px; border-radius: 12px; }
+.mini-cover { height: 160px; background: var(--paper); border: 1px solid #ddd; display: grid; place-items: center; color: var(--accent); font-family: "Cormorant Garamond"; font-size: 26px; }
+.template-mini h3 { margin: 11px 3px 3px; font-size: 13px; }
+.template-mini p { margin: 0 3px 8px; color: #888; font-size: 10px; line-height: 1.4; }
+
+.full-editor { min-height: 100vh; background: #eef0f2; }
+.editor-topbar {
+  height: 68px; background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center;
+  padding: 0 18px; gap: 15px; position: sticky; top: 0; z-index: 35;
+}
+.back-btn { border: 0; background: transparent; display: flex; align-items: center; gap: 5px; color: #666; font-size: 11px; }
+.editor-title { display: flex; align-items: center; gap: 6px; font-family: "Cormorant Garamond"; font-size: 21px; margin-right: auto; }
+.editor-top-actions { display: flex; gap: 7px; align-items: center; }
+.saved { color: #5c7c57; font-size: 11px; }
+
+.editor-workspace { display: grid; grid-template-columns: 80px minmax(380px, 530px) minmax(380px, 1fr); min-height: calc(100vh - 68px); }
+.editor-menu { background: #1c1d2b; padding: 15px 8px; }
+.editor-menu button {
+  border: 0; width: 100%; background: transparent; color: #bfc0ca; padding: 13px 5px; border-radius: 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 9px;
+}
+.editor-menu button.active, .editor-menu button:hover { background: #7660b4; color: #fff; }
+
+.editor-controls { background: #fff; border-right: 1px solid #ddd; overflow: auto; }
+.controls-inner { padding: 28px; }
+.panel-title { border-bottom: 1px solid #eee; padding-bottom: 18px; margin-bottom: 22px; }
+.panel-title h2 { margin: 0 0 4px; font-family: "Cormorant Garamond"; font-size: 30px; }
+.panel-title p { margin: 0; color: #888; font-size: 11px; line-height: 1.5; }
+.form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 7px; color: #555; font-size: 10px; margin-bottom: 17px; }
+.field.full { grid-column: 1 / -1; }
+.field input, .field textarea {
+  width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px; color: #333; background: #fff; outline: none;
+}
+.field input:focus, .field textarea:focus { border-color: #8a9b7e; }
+.field input[type="color"] { height: 42px; padding: 3px; }
+.field small { color: #999; font-size: 9px; }
+.control-thumb { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; margin-top: 5px; }
+.info-note { background: #f5f1e8; padding: 14px; border-radius: 9px; color: #777; font-size: 10px; line-height: 1.5; margin-top: 8px; }
+.info-note strong { color: #5d5b54; }
+.info-note p { margin: 5px 0 0; }
+.upload-zone {
+  min-height: 170px; border: 1.5px dashed #ccc; border-radius: 11px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; color: #777; position: relative; margin-bottom: 18px;
+}
+.upload-zone svg { color: #7e9072; }
+.upload-zone span { font-size: 9px; color: #aaa; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.gallery-control-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.gallery-control-item { position: relative; height: 150px; border-radius: 8px; overflow: hidden; }
+.gallery-control-item img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-control-item button { position: absolute; right: 5px; top: 5px; border: 0; background: rgba(255,255,255,.9); border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; color: #a55; }
+.design-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.design-option { text-align: left; background: #fff; border: 1px solid #ddd; border-radius: 9px; padding: 7px; }
+.design-option.selected { border: 2px solid #7d8d71; }
+.design-swatch { height: 90px; background: var(--paper); display: grid; place-items: center; color: var(--accent); font-family: "Cormorant Garamond"; font-size: 22px; }
+.design-option strong, .design-option small { display: block; margin: 6px 3px 0; }
+.design-option strong { font-size: 11px; }
+.design-option small { font-size: 8px; color: #999; }
+
+.live-preview { display: flex; flex-direction: column; align-items: center; padding: 18px; background: #e7e8eb; overflow: auto; }
+.preview-label { font-size: 9px; letter-spacing: .08em; color: #888; margin-bottom: 8px; }
+.phone-preview { width: min(390px, 100%); height: calc(100vh - 100px); min-height: 600px; background: #fff; border: 7px solid #202020; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 45px rgba(0,0,0,.15); }
+.phone-preview .public-site { min-height: 100%; height: 100%; overflow: auto; }
+.phone-preview .hero-public { min-height: 650px; padding: 20px 12px; }
+.phone-preview .hero-paper { min-height: 610px; padding: 35px 20px; }
+.phone-preview .hero-image { height: 230px; }
+.phone-preview .hero-public h1 { font-size: 48px; }
+.phone-preview .hero-subtitle { font-size: 18px; }
+.phone-preview .public-section { padding: 65px 20px; }
+.phone-preview .script-text { font-size: 28px; }
+.phone-preview .event-grid { grid-template-columns: 1fr; }
+.phone-preview .public-gallery { grid-template-columns: 1fr 1fr; }
+
+.auth-page { min-height: 100vh; background: #f7f5ef; display: grid; place-items: center; padding: 20px; }
+.auth-card { width: min(100%, 430px); background: #fff; border: 1px solid #e2ded5; border-radius: 16px; padding: 35px; box-shadow: 0 20px 60px rgba(70,60,40,.08); }
+.auth-logo { display: flex; align-items: center; gap: 7px; color: #748269; font-size: 17px; font-weight: 700; }
+.auth-logo span { font-weight: 400; }
+.auth-card h1 { font-family: "Cormorant Garamond"; font-size: 40px; margin: 28px 0 3px; }
+.auth-card > p { color: #888; font-size: 12px; line-height: 1.5; margin-bottom: 25px; }
+.auth-card .field { margin-bottom: 15px; }
+.auth-card .centered { width: 100%; margin-top: 7px; }
+.text-button { width: 100%; border: 0; background: transparent; padding: 14px; color: #6c8063; font-size: 11px; }
+.auth-message { padding: 9px; background: #f5f0e6; border-radius: 7px; font-size: 10px; margin-bottom: 8px; }
+
+.public-site { --accent:#7f8f73; --paper:#f8f5ef; background: var(--paper); color: #41413b; min-height: 100vh; }
+.public-site a { text-decoration: none; }
+.floating-menu { position: fixed; right: 20px; top: 18px; z-index: 30; border: 1px solid #ddd; background: rgba(255,255,255,.92); width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: #555; }
+.public-menu { position: fixed; z-index: 29; right: 20px; top: 68px; background: #fff; border-radius: 10px; box-shadow: 0 10px 35px rgba(0,0,0,.14); padding: 7px; display: grid; }
+.public-menu a { font-size: 10px; padding: 9px 14px; }
+.music-toggle { position: fixed; left: 18px; bottom: 18px; z-index: 30; border: 1px solid #ddd; background: #fff; color: var(--accent); width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; }
+.hero-public { min-height: 800px; padding: 35px 22px; display: grid; place-items: center; }
+.hero-paper { width: min(100%, 700px); min-height: 720px; position: relative; overflow: hidden; background: rgba(255,255,255,.72); border: 1px solid rgba(80,80,70,.2); padding: 60px 35px; text-align: center; box-shadow: 0 10px 40px rgba(50,40,30,.04); }
+.eyebrow { text-transform: uppercase; letter-spacing: .16em; font-size: 12px; margin: 0 0 14px; }
+.hero-public h1 { font-family: "Cormorant Garamond"; font-size: clamp(52px, 9vw, 82px); font-weight: 500; margin: 0; color: #4d4d45; }
+.hero-public h1 span { color: var(--accent); font-family: "Parisienne"; }
+.hero-subtitle { font-family: "Cormorant Garamond"; font-size: 23px; max-width: 500px; margin: 12px auto 25px; }
+.hero-image { width: min(100%, 500px); height: 340px; margin: auto; overflow: hidden; background: #e5e0d7; }
+.hero-image img { width: 100%; height: 100%; object-fit: cover; }
+.empty-photo { height: 100%; display: grid; place-items: center; font-family: "Cormorant Garamond"; font-size: 24px; color: #9b978e; }
+.hero-date { font-family: "Cormorant Garamond"; font-size: 25px; margin: 22px 0 0; }
+.hero-botanical { position: absolute; top: 250px; opacity: .75; }
+.hero-botanical.left { left: -30px; transform: rotate(-7deg); }
+.hero-botanical.right { right: -30px; transform: scaleX(-1) rotate(-7deg); }
+.leaf { width: 180px; fill: none; stroke: var(--accent); stroke-width: 2; }
+.leaf path { stroke-linecap: round; }
+.public-section { max-width: 1050px; margin: auto; padding: 100px 25px; text-align: center; }
+.mini-ornament .leaf { width: 120px; }
+.script-text { max-width: 750px; margin: 25px auto 40px; font-family: "Parisienne"; font-size: clamp(31px, 5vw, 48px); line-height: 1.35; }
+.couple-name { font-family: "Cormorant Garamond"; letter-spacing: .08em; font-size: 24px; }
+.accent-icon { color: var(--accent); margin: 13px auto; }
+.date-block { max-width: none; background: rgba(255,255,255,.5); }
+.date-block h2, .gallery-block h2, .contact-card h2 { font-family: "Cormorant Garamond"; font-weight: 500; font-size: 45px; margin: 5px 0; }
+.large-time { font-family: "Cormorant Garamond"; font-size: 28px; }
+.countdown { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; margin-top: 28px; }
+.time-box { min-width: 78px; border: 1px solid #d9d5cc; padding: 11px 7px; background: rgba(255,255,255,.65); }
+.time-box strong { display: block; font-family: "Cormorant Garamond"; font-size: 29px; font-weight: 500; }
+.time-box span { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: #777; }
+.event-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.event-box { background: rgba(255,255,255,.5); border: 1px solid #dedad1; padding: 34px 20px; }
+.event-box h3 { font-family: "Cormorant Garamond"; font-size: 28px; margin: 5px 0; }
+.event-box p { font-size: 12px; color: #777; line-height: 1.55; }
+.event-box strong { font-family: "Cormorant Garamond"; font-size: 19px; }
+.event-box a { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 14px; font-size: 10px; text-decoration: underline; text-underline-offset: 4px; }
+.public-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 30px; }
+.public-gallery img { width: 100%; height: 260px; object-fit: cover; }
+.contact-block { max-width: 800px; }
+.contact-card { background: #fff; border: 1px solid #ddd8ce; padding: 50px 25px; }
+.contact-card p:not(.section-kicker) { color: #777; font-size: 13px; line-height: 1.7; }
+.accent-button { border: 0; background: var(--accent); color: #fff; padding: 13px 19px; border-radius: 4px; margin-top: 12px; }
+.public-footer { padding: 55px 20px 75px; text-align: center; font-family: "Cormorant Garamond"; font-size: 21px; }
+.public-footer small { display: block; color: #999; font-family: Montserrat; font-size: 9px; margin-top: 5px; }
+
+.template-elegant { --accent:#9b7b55; }
+.template-rose { --accent:#b77c82; }
+.template-modern { --accent:#4c6370; }
+.template-elegant .hero-paper { box-shadow: none; }
+.template-modern h1 { font-family: "Montserrat"; font-weight: 400; letter-spacing: -.04em; }
+.template-modern .script-text { font-family: "Cormorant Garamond"; }
+.template-rose .script-text { font-family: "Parisienne"; }
+
+@media (max-width: 1150px) {
+  .editor-workspace { grid-template-columns: 75px 430px 1fr; }
+  .editor-top-actions .outline-btn { display: none; }
+}
+@media (max-width: 850px) {
+  .app-sidebar { width: 220px; transform: translateX(-100%); transition: .2s; }
+  .app-sidebar.open { transform: translateX(0); }
+  .app-main { margin-left: 0; width: 100%; }
+  .mobile-menu { display: grid; place-items: center; position: fixed; left: 12px; top: 12px; z-index: 60; width: 40px; height: 40px; border: 0; background: #1c1d2b; color: #fff; border-radius: 8px; }
+  .topbar { padding: 65px 22px 24px; flex-direction: column; align-items: stretch; }
+  .stats, .invitation-grid { padding-left: 22px; padding-right: 22px; }
+  .template-chooser { grid-template-columns: 1fr 1fr; }
+  .editor-workspace { grid-template-columns: 65px 1fr; }
+  .live-preview { display: none; }
+}
+@media (max-width: 600px) {
+  .stats { grid-template-columns: 1fr; }
+  .template-chooser { grid-template-columns: 1fr; }
+  .form-two { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+  .editor-topbar { padding-left: 10px; }
+  .editor-title { display: none; }
+  .editor-top-actions { margin-left: auto; }
+  .editor-top-actions .publish-btn, .editor-top-actions .unpublish-btn { display: none; }
+  .controls-inner { padding: 20px 15px; }
+  .hero-public { padding: 18px 10px; }
+  .hero-paper { min-height: 680px; padding: 45px 18px; }
+  .hero-image { height: 270px; }
+  .hero-public h1 { font-size: 50px; }
+  .hero-botanical { opacity: .45; }
+  .event-grid { grid-template-columns: 1fr; }
+  .public-gallery { grid-template-columns: 1fr 1fr; }
+  .public-gallery img { height: 180px; }
+}
